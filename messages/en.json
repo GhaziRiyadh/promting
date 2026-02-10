@@ -1,0 +1,15 @@
+{
+    "Index": {
+        "title": "Prompt Builder"
+    },
+    "ThemeToggle": {
+        "light": "Light",
+        "dark": "Dark",
+        "system": "System"
+    },
+    "Builder": {
+        "generate": "Generate Prompt",
+        "copy": "Copy to Clipboard",
+        "save": "Save Prompt"
+    }
+}
