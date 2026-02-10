@@ -1,0 +1,68 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id                String   @id @default(uuid())
+  email             String   @unique
+  name              String?
+  preferredLanguage String?
+  preferredTheme    String?
+  role              UserRole @default(USER)
+  prompts           Prompt[]
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
+enum UserRole {
+  ADMIN
+  USER
+}
+
+model PromptType {
+  id              String        @id @default(uuid())
+  key             String        @unique
+  name_i18n       Json
+  description_i18n Json?
+  rolePrompt      String
+  isActive        Boolean       @default(true)
+  fields          PromptField[]
+  prompts         Prompt[]
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+}
+
+model PromptField {
+  id               String      @id @default(uuid())
+  promptTypeId     String
+  promptType       PromptType  @relation(fields: [promptTypeId], references: [id])
+  key              String
+  type             String
+  label_i18n       Json
+  placeholder_i18n Json?
+  required         Boolean     @default(false)
+  order            Int         @default(0)
+  options          Json?
+  rules            Json?
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+
+  @@unique([promptTypeId, key])
+}
+
+model Prompt {
+  id           String      @id @default(uuid())
+  title        String
+  userId       String
+  user         User        @relation(fields: [userId], references: [id])
+  promptTypeId String
+  promptType   PromptType  @relation(fields: [promptTypeId], references: [id])
+  inputs       Json
+  finalPrompt  String      @db.Text
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+}
