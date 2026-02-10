@@ -1,4 +1,4 @@
-import { routing } from './i18n/routing';
+import { routing } from '@/i18n/routing';
 
 export async function generateStaticParams() {
     return routing.locales.map((locale) => ({ locale }));
