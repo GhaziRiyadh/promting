@@ -1,10 +1,17 @@
-import { PrismaClient, UserRole } from '@prisma/client'
-import bcrypt from 'bcryptjs'
+const { Pool } = require('pg')
+const { PrismaPg } = require('@prisma/adapter-pg')
+const { PrismaClient } = require('@prisma/client')
+const bcrypt = require('bcryptjs')
+require('dotenv').config()
 
-const prisma = new PrismaClient()
+const connectionString = `${process.env.DATABASE_URL}`
+
+const pool = new Pool({ connectionString })
+const adapter = new PrismaPg(pool)
+const prisma = new PrismaClient({ adapter })
 
 async function main() {
-    console.log('Seeding database...')
+    console.log('Seeding database (JS force)...')
 
     // 1. Create Users
     const passwordAdmin = await bcrypt.hash('admin123', 10)
@@ -17,11 +24,14 @@ async function main() {
             email: 'admin@promptapp.com',
             name: 'Admin User',
             password: passwordAdmin,
-            role: UserRole.ADMIN,
+            role: 'ADMIN', // Enum as string in JS and with Adapter
             preferredLanguage: 'en',
             preferredTheme: 'light',
         },
     })
+
+    // For UserRole specifically, depending on Adapter/Prisma it might be represented as string or special object.
+    // Standard JS client usually handles string <-> Enum mapping.
 
     const user = await prisma.user.upsert({
         where: { email: 'user@promptapp.com' },
@@ -30,7 +40,7 @@ async function main() {
             email: 'user@promptapp.com',
             name: 'Regular User',
             password: passwordUser,
-            role: UserRole.USER,
+            role: 'USER',
             preferredLanguage: 'en',
             preferredTheme: 'light',
         },
@@ -59,7 +69,7 @@ async function main() {
                     },
                     {
                         key: 'code',
-                        type: 'textarea', // "code" type mappped to textarea for MVP
+                        type: 'textarea',
                         label_i18n: { en: 'Code Snippet', ar: 'مقتطف الكود' },
                         placeholder_i18n: { en: 'Paste your code here...', ar: 'الصق الكود هنا...' },
                         required: true,
@@ -104,11 +114,9 @@ async function main() {
                         placeholder_i18n: { en: 'e.g. Use async/await, no external libs', ar: 'مثال: استخدم async/await، بدون مكتبات خارجية' },
                         required: false,
                         order: 2,
-                        // Example rule: only show constraint if description is not empty (simple Logic)
-                        // or meaningless for this specific prompt but adding structure
                         rules: {
                             field: 'description',
-                            operator: 'contains', // Just an example condition
+                            operator: 'contains',
                             value: 'api'
                         }
                     }
@@ -117,7 +125,6 @@ async function main() {
         }
     })
 
-    console.log({ debugPrompt, generatePrompt })
     console.log('Seeding finished.')
 }
 
