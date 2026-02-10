@@ -1,11 +1,8 @@
 import { notFound } from 'next/navigation';
-import { PrismaClient } from '@prisma/client';
+import { prisma } from '@/lib/prisma';
 import { BuilderInterface } from '@/components/builder/builder-interface';
 
 export const dynamic = 'force-dynamic';
-
-
-const prisma = new PrismaClient();
 
 interface PageProps {
     params: Promise<{

@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { redirect } from "next/navigation";
@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardFooter, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { FileText, Plus } from "lucide-react";
 
-const prisma = new PrismaClient();
 
 export default async function DashboardPage() {
     const session = await getServerSession(authOptions);

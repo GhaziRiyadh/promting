@@ -11,5 +11,69 @@
         "generate": "Generate Prompt",
         "copy": "Copy to Clipboard",
         "save": "Save Prompt"
+    },
+    "Landing": {
+        "hero": {
+            "headline": "Create AI Prompts with Ease",
+            "subheadline": "Generate and customize AI prompts in minutes without coding.",
+            "ctaPrimary": "Try It Now",
+            "ctaSecondary": "Learn More"
+        },
+        "features": {
+            "title": "Key Features",
+            "description": "Everything you need to create powerful AI prompts",
+            "noCoding": {
+                "title": "No Coding Required",
+                "description": "Build prompts with an intuitive interface - no programming skills needed"
+            },
+            "simpleUI": {
+                "title": "Simple User Interface",
+                "description": "Clean and user-friendly design that makes prompt creation effortless"
+            },
+            "livePreview": {
+                "title": "Live Prompt Preview",
+                "description": "See your prompt in real-time as you build it"
+            },
+            "saveManage": {
+                "title": "Save and Manage Prompts",
+                "description": "Store all your prompts in one place and access them anytime"
+            },
+            "download": {
+                "title": "Download Your Prompts",
+                "description": "Export your prompts to use in any AI platform"
+            }
+        },
+        "howItWorks": {
+            "title": "How It Works",
+            "step1": {
+                "title": "Choose a Template",
+                "description": "Select from our library of pre-built prompt templates"
+            },
+            "step2": {
+                "title": "Customize Your Prompt",
+                "description": "Fill in the fields and adjust settings to fit your needs"
+            },
+            "step3": {
+                "title": "Generate and Save",
+                "description": "Get your final prompt and save it for future use"
+            }
+        },
+        "cta": {
+            "title": "Ready to Create Your AI Prompts?",
+            "subtitle": "Start creating your own AI prompts today!",
+            "button": "Get Started"
+        },
+        "footer": {
+            "about": "About",
+            "contact": "Contact Us",
+            "privacy": "Privacy Policy",
+            "copyright": "© 2026 Dynamic AI Prompt Builder. All rights reserved."
+        },
+        "nav": {
+            "home": "Home",
+            "features": "Features",
+            "howItWorks": "How It Works",
+            "contact": "Contact"
+        }
     }
 }
