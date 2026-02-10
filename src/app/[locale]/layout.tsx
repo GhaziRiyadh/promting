@@ -27,16 +27,24 @@ export default async function LocaleLayout({
         <html lang={locale} dir={locale === 'ar' ? 'rtl' : 'ltr'}>
             <body>
                 <NextIntlClientProvider messages={messages}>
-                    <ThemeProvider
-                        attribute="class"
-                        defaultTheme="system"
-                        enableSystem
-                        disableTransitionOnChange
-                    >
-                        {children}
-                    </ThemeProvider>
+                    <Providers>
+                        <ThemeProvider
+                            attribute="class"
+                            defaultTheme="system"
+                            enableSystem
+                            disableTransitionOnChange
+                        >
+                            {children}
+                        </ThemeProvider>
+                    </Providers>
                 </NextIntlClientProvider>
             </body>
         </html>
     );
+}
+
+import { SessionProvider } from "next-auth/react";
+
+function Providers({ children }: { children: React.ReactNode }) {
+    return <SessionProvider>{children}</SessionProvider>;
 }

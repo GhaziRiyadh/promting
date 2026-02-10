@@ -1,9 +1,20 @@
-import createMiddleware from 'next-intl/middleware';
-import { routing } from './i18n/routing';
+import { withAuth } from "next-auth/middleware";
+import { NextResponse } from "next/server";
 
-export default createMiddleware(routing);
+export default withAuth(
+    function middleware(req) {
+        // Admin route protection
+        if (req.nextUrl.pathname.startsWith("/admin") && req.nextauth.token?.role !== "ADMIN") {
+            return NextResponse.redirect(new URL("/dashboard", req.url));
+        }
+    },
+    {
+        callbacks: {
+            authorized: ({ token }) => !!token,
+        },
+    }
+);
 
 export const config = {
-    // Match only internationalized pathnames
-    matcher: ['/', '/(ar|en)/:path*']
+    matcher: ["/dashboard/:path*", "/admin/:path*"],
 };

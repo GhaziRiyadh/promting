@@ -53,5 +53,6 @@
   },
   "prisma": {
     "seed": "npx tsx prisma/seed.ts"
-  }
+  },
+  "types": "src/types/next-auth.d.ts"
 }
