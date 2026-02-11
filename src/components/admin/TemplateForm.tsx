@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
-import { PromptType, PromptField } from '@prisma/client';
+import { PromptType, PromptField, GlobalKeyword } from '@prisma/client';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -37,6 +37,23 @@ export function TemplateForm({ template, locale, onClose, onSuccess }: TemplateF
             options: f.options
         })) || []
     });
+
+    const [globalKeywords, setGlobalKeywords] = useState<GlobalKeyword[]>([]);
+
+    useEffect(() => {
+        const fetchGlobalKeywords = async () => {
+            try {
+                const res = await fetch('/api/admin/global-keywords');
+                if (res.ok) {
+                    const data = await res.json();
+                    setGlobalKeywords(data);
+                }
+            } catch (error) {
+                console.error("Failed to fetch global keywords", error);
+            }
+        };
+        fetchGlobalKeywords();
+    }, []);
 
     const addField = () => {
         setFormData(prev => ({
@@ -173,9 +190,9 @@ export function TemplateForm({ template, locale, onClose, onSuccess }: TemplateF
                             <div className="text-xs text-blue-700 dark:text-blue-300 leading-relaxed">
                                 <p className="mb-2">💡 <strong>How to use:</strong> Type field keys inside curly braces to inject user input directly into the role prompt. For example: <code>"You are a specialist in {"{topic}"}..."</code>.</p>
 
-                                <div className="space-y-2 pt-2 border-t border-blue-100 dark:border-blue-900/50">
+                                <div className="space-y-3 pt-2 border-t border-blue-100 dark:border-blue-900/50">
                                     <div className="flex flex-wrap gap-2 items-center">
-                                        <span className="font-semibold shrink-0">Available keys:</span>
+                                        <span className="font-semibold shrink-0">Field keys:</span>
                                         {formData.fields.length > 0 ? (
                                             formData.fields.map(f => f.key).filter(k => !!k).map((k, i) => (
                                                 <button
@@ -187,10 +204,8 @@ export function TemplateForm({ template, locale, onClose, onSuccess }: TemplateF
                                                             const start = el.selectionStart;
                                                             const end = el.selectionEnd;
                                                             const text = el.value;
-                                                            const before = text.substring(0, start);
-                                                            const after = text.substring(end, text.length);
                                                             const insertion = `{${k}}`;
-                                                            setFormData(prev => ({ ...prev, rolePrompt: before + insertion + after }));
+                                                            setFormData(prev => ({ ...prev, rolePrompt: text.substring(0, start) + insertion + text.substring(end) }));
                                                             setTimeout(() => {
                                                                 el.focus();
                                                                 el.setSelectionRange(start + insertion.length, start + insertion.length);
@@ -204,10 +219,39 @@ export function TemplateForm({ template, locale, onClose, onSuccess }: TemplateF
                                                 </button>
                                             ))
                                         ) : (
-                                            <span className="text-blue-500 italic">None yet. Add fields below.</span>
+                                            <span className="text-blue-500 italic text-[10px]">None. Add fields below.</span>
                                         )}
                                     </div>
-                                    <p className="text-[10px] opacity-80 italic">Click any key above to insert it at your cursor position in the Role Prompt area below.</p>
+
+                                    {globalKeywords.length > 0 && (
+                                        <div className="flex flex-wrap gap-2 items-center">
+                                            <span className="font-semibold shrink-0">Suggested:</span>
+                                            {globalKeywords.map((kw) => (
+                                                <button
+                                                    key={kw.id}
+                                                    type="button"
+                                                    onClick={() => {
+                                                        const el = document.getElementById('role-prompt-area') as HTMLTextAreaElement;
+                                                        if (el) {
+                                                            const start = el.selectionStart;
+                                                            const end = el.selectionEnd;
+                                                            const text = el.value;
+                                                            setFormData(prev => ({ ...prev, rolePrompt: text.substring(0, start) + kw.text + text.substring(end) }));
+                                                            setTimeout(() => {
+                                                                el.focus();
+                                                                el.setSelectionRange(start + kw.text.length, start + kw.text.length);
+                                                            }, 0);
+                                                        }
+                                                    }}
+                                                    className="px-1.5 py-0.5 bg-indigo-100 dark:bg-indigo-900 rounded border border-indigo-200 dark:border-indigo-800 hover:bg-indigo-200 dark:hover:bg-indigo-800 transition-colors"
+                                                    title="Click to insert"
+                                                >
+                                                    {kw.text}
+                                                </button>
+                                            ))}
+                                        </div>
+                                    )}
+                                    <p className="text-[10px] opacity-80 italic">Click any badge above to insert it at your cursor position.</p>
                                 </div>
                             </div>
                         </div>
@@ -220,6 +264,7 @@ export function TemplateForm({ template, locale, onClose, onSuccess }: TemplateF
                             required
                         />
                     </div>
+
 
                     <div className="space-y-4 border-t pt-4">
                         <div className="flex justify-between items-center">
@@ -333,7 +378,8 @@ export function TemplateForm({ template, locale, onClose, onSuccess }: TemplateF
                                                             className="h-8 text-xs font-mono"
                                                             value={opt.value}
                                                             onChange={e => {
-                                                                const newOpts = [...field.options];
+                                                                const options = Array.isArray(field.options) ? field.options : [];
+                                                                const newOpts = [...options];
                                                                 newOpts[optIdx] = { ...newOpts[optIdx], value: e.target.value };
                                                                 handleFieldChange(index, 'options', newOpts);
                                                             }}
@@ -345,7 +391,8 @@ export function TemplateForm({ template, locale, onClose, onSuccess }: TemplateF
                                                             className="h-8 text-xs"
                                                             value={opt.label_i18n?.en || ''}
                                                             onChange={e => {
-                                                                const newOpts = [...field.options];
+                                                                const options = Array.isArray(field.options) ? field.options : [];
+                                                                const newOpts = [...options];
                                                                 newOpts[optIdx] = { ...newOpts[optIdx], label_i18n: { ...newOpts[optIdx].label_i18n, en: e.target.value } };
                                                                 handleFieldChange(index, 'options', newOpts);
                                                             }}
@@ -358,7 +405,8 @@ export function TemplateForm({ template, locale, onClose, onSuccess }: TemplateF
                                                             dir="rtl"
                                                             value={opt.label_i18n?.ar || ''}
                                                             onChange={e => {
-                                                                const newOpts = [...field.options];
+                                                                const options = Array.isArray(field.options) ? field.options : [];
+                                                                const newOpts = [...options];
                                                                 newOpts[optIdx] = { ...newOpts[optIdx], label_i18n: { ...newOpts[optIdx].label_i18n, ar: e.target.value } };
                                                                 handleFieldChange(index, 'options', newOpts);
                                                             }}
@@ -371,7 +419,8 @@ export function TemplateForm({ template, locale, onClose, onSuccess }: TemplateF
                                                             size="icon"
                                                             className="h-6 w-6 text-destructive"
                                                             onClick={() => {
-                                                                handleFieldChange(index, 'options', field.options.filter((_: any, i: number) => i !== optIdx));
+                                                                const options = Array.isArray(field.options) ? field.options : [];
+                                                                handleFieldChange(index, 'options', options.filter((_: any, i: number) => i !== optIdx));
                                                             }}
                                                         >
                                                             <Trash className="h-3 w-3" />

@@ -39,7 +39,7 @@ export async function POST(req: Request) {
 
     try {
         const body = await req.json();
-        const { key, name_i18n, description_i18n, rolePrompt, isActive, fields } = body;
+        const { key, name_i18n, description_i18n, rolePrompt, isActive, fields, suggestedKeywords } = body;
 
         const result = await prisma.promptType.create({
             data: {
@@ -48,6 +48,7 @@ export async function POST(req: Request) {
                 description_i18n,
                 rolePrompt,
                 isActive: isActive ?? true,
+                suggestedKeywords: suggestedKeywords || [],
                 fields: {
                     create: fields?.map((field: any) => ({
                         key: field.key,

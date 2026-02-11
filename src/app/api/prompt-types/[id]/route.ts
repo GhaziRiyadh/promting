@@ -34,7 +34,7 @@ export async function PUT(
     const { id } = await params;
     try {
         const body = await request.json();
-        const { key, name_i18n, description_i18n, rolePrompt, isActive, fields } = body;
+        const { key, name_i18n, description_i18n, rolePrompt, isActive, fields, suggestedKeywords } = body;
 
         // Use a transaction to update the PromptType and its fields
         const result = await prisma.$transaction(async (tx) => {
@@ -47,6 +47,7 @@ export async function PUT(
                     description_i18n,
                     rolePrompt,
                     isActive: isActive ?? true,
+                    suggestedKeywords: suggestedKeywords || [],
                 }
             });
 

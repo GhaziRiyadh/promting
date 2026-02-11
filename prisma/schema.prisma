@@ -25,45 +25,53 @@ enum UserRole {
 }
 
 model PromptType {
-  id              String        @id @default(uuid())
-  key             String        @unique
-  name_i18n       Json
-  description_i18n Json?
-  rolePrompt      String
-  isActive        Boolean       @default(true)
-  fields          PromptField[]
-  prompts         Prompt[]
-  createdAt       DateTime      @default(now())
-  updatedAt       DateTime      @updatedAt
+  id                String        @id @default(uuid())
+  key               String        @unique
+  name_i18n         Json
+  description_i18n  Json?
+  rolePrompt        String
+  isActive          Boolean       @default(true)
+  fields            PromptField[]
+  prompts           Prompt[]
+  suggestedKeywords Json?
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
 }
 
 model PromptField {
-  id               String      @id @default(uuid())
+  id               String     @id @default(uuid())
   promptTypeId     String
-  promptType       PromptType  @relation(fields: [promptTypeId], references: [id])
+  promptType       PromptType @relation(fields: [promptTypeId], references: [id])
   key              String
   type             String
   label_i18n       Json
   placeholder_i18n Json?
-  required         Boolean     @default(false)
-  order            Int         @default(0)
+  required         Boolean    @default(false)
+  order            Int        @default(0)
   options          Json?
   rules            Json?
-  createdAt        DateTime    @default(now())
-  updatedAt        DateTime    @updatedAt
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
 
   @@unique([promptTypeId, key])
 }
 
 model Prompt {
-  id           String      @id @default(uuid())
+  id           String     @id @default(uuid())
   title        String
   userId       String
-  user         User        @relation(fields: [userId], references: [id])
+  user         User       @relation(fields: [userId], references: [id])
   promptTypeId String
-  promptType   PromptType  @relation(fields: [promptTypeId], references: [id])
+  promptType   PromptType @relation(fields: [promptTypeId], references: [id])
   inputs       Json
-  finalPrompt  String      @db.Text
-  createdAt    DateTime    @default(now())
-  updatedAt    DateTime    @updatedAt
+  finalPrompt  String     @db.Text
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+}
+
+model GlobalKeyword {
+  id        String   @id @default(uuid())
+  text      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
