@@ -8,8 +8,9 @@ export function Footer() {
     const t = useTranslations('Landing.footer');
 
     return (
-        <footer id="contact" className="border-t bg-muted/50">
+        <footer id="contact" className="border-t bg-muted/50 px-4 md:px-6 lg:px-8">
             <div className="container py-12 md:py-16">
+
                 <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
                     {/* Brand Section */}
                     <div className="space-y-4">

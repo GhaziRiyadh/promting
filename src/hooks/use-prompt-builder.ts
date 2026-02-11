@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { PromptType, PromptField } from '@prisma/client';
-import { evaluateRuleGroup, RuleGroup, Rule } from '@/lib/engine/rules';
+import { evaluateAnyRule, RuleGroup, Rule } from '@/lib/engine/rules';
 import { strategies } from '@/lib/engine/strategies';
 
 export function usePromptBuilder(promptType: PromptType & { fields: PromptField[] }) {
@@ -13,8 +13,7 @@ export function usePromptBuilder(promptType: PromptType & { fields: PromptField[
             .filter(field => {
                 if (!field.rules) return true;
                 // Parse rules from JSON
-                const ruleGroup = field.rules as unknown as RuleGroup;
-                return evaluateRuleGroup(ruleGroup, inputs);
+                return evaluateAnyRule(field.rules as any, inputs);
             })
             .sort((a, b) => a.order - b.order);
     }, [promptType.fields, inputs]);

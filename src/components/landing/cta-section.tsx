@@ -9,8 +9,9 @@ export function CtaSection() {
     const t = useTranslations('Landing.cta');
 
     return (
-        <section className="py-16 md:py-24 bg-linear-to-br from-primary/10 via-primary/5 to-background">
+        <section className="py-16 md:py-24 bg-linear-to-br from-primary/10 via-primary/5 to-background px-4 md:px-6 lg:px-8">
             <div className="container">
+
                 <div className="relative overflow-hidden rounded-3xl bg-primary text-primary-foreground p-8 md:p-16">
                     {/* Background Decoration */}
                     <div className="absolute inset-0 bg-grid-white/10 mask-[linear-gradient(0deg,transparent,black)]" />

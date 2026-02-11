@@ -33,13 +33,28 @@ export function evaluateRule(rule: Rule, inputs: Record<string, any>): boolean {
 }
 
 export function evaluateRuleGroup(group: RuleGroup, inputs: Record<string, any>): boolean {
+    if (!group || !group.rules) return true;
+
     if (group.combinator === 'AND') {
-        return group.rules.every(r =>
-            'combinator' in r ? evaluateRuleGroup(r as RuleGroup, inputs) : evaluateRule(r as Rule, inputs)
-        );
+        return group.rules.every(r => evaluateAnyRule(r as any, inputs));
     } else {
-        return group.rules.some(r =>
-            'combinator' in r ? evaluateRuleGroup(r as RuleGroup, inputs) : evaluateRule(r as Rule, inputs)
-        );
+        return group.rules.some(r => evaluateAnyRule(r as any, inputs));
     }
 }
+
+export function evaluateAnyRule(ruleOrGroup: Rule | RuleGroup, inputs: Record<string, any>): boolean {
+    if (!ruleOrGroup) return true;
+
+    // Check if it's a RuleGroup by looking for 'combinator'
+    if (typeof ruleOrGroup === 'object' && 'combinator' in ruleOrGroup && 'rules' in ruleOrGroup) {
+        return evaluateRuleGroup(ruleOrGroup as RuleGroup, inputs);
+    }
+
+    // Otherwise treat as a single Rule if it has the required properties
+    if (typeof ruleOrGroup === 'object' && 'field' in ruleOrGroup && 'operator' in ruleOrGroup) {
+        return evaluateRule(ruleOrGroup as Rule, inputs);
+    }
+
+    return true; // Default to visible if rule is malformed
+}
+

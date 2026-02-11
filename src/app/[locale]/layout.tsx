@@ -7,6 +7,7 @@ import type { Metadata } from "next";
 import "@/app/globals.css";
 
 export const metadata: Metadata = {
+    metadataBase: new URL(process.env.NEXTAUTH_URL || 'http://localhost:3002'),
     title: "Dynamic AI Prompt Builder | Create AI Prompts with Ease",
     description: "Generate and customize AI prompts in minutes without coding. Build powerful prompts with an intuitive interface, live preview, and easy management.",
     keywords: ["AI prompts", "prompt builder", "AI tools", "prompt generator", "no code AI"],
@@ -47,12 +48,16 @@ export const metadata: Metadata = {
             'max-snippet': -1,
         },
     },
-    viewport: {
+};
+
+export function generateViewport() {
+    return {
         width: 'device-width',
         initialScale: 1,
         maximumScale: 5,
-    },
-};
+    };
+}
+
 
 
 export default async function LocaleLayout({

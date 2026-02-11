@@ -7,7 +7,7 @@ import { FieldFactory } from './field-factory';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useTranslations } from 'next-intl';
-import { useRouter } from 'next/navigation';
+import { useRouter } from '@/i18n/routing';
 
 interface BuilderInterfaceProps {
     promptType: PromptType & { fields: PromptField[] };

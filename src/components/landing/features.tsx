@@ -16,8 +16,9 @@ export function Features() {
     const t = useTranslations('Landing.features');
 
     return (
-        <section id="features" className="py-16 md:py-24 bg-muted/50">
+        <section id="features" className="py-16 md:py-24 bg-muted/50 px-4 md:px-6 lg:px-8">
             <div className="container">
+
                 <div className="text-center space-y-4 mb-12">
                     <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
                         {t('title')}
