@@ -5,6 +5,7 @@ import { redirect } from "@/i18n/routing";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { AdminTemplateManager } from "@/components/admin/AdminTemplateManager";
 import { GlobalKeywordManager } from "@/components/admin/GlobalKeywordManager";
+import { AdminUserManager } from "@/components/admin/AdminUserManager";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface AdminPageProps {
@@ -59,15 +60,19 @@ export default async function AdminPage({ params }: AdminPageProps) {
             </div>
 
             <Tabs defaultValue="templates" className="w-full">
-                <TabsList className="grid w-full grid-cols-2 mb-8">
+                <TabsList className="grid w-full grid-cols-3 mb-8">
                     <TabsTrigger value="templates">Prompt Templates</TabsTrigger>
                     <TabsTrigger value="keywords">Global Suggested Keywords</TabsTrigger>
+                    <TabsTrigger value="users">Manage Users</TabsTrigger>
                 </TabsList>
                 <TabsContent value="templates" className="space-y-6">
                     <AdminTemplateManager locale={locale} />
                 </TabsContent>
                 <TabsContent value="keywords">
                     <GlobalKeywordManager />
+                </TabsContent>
+                <TabsContent value="users">
+                    <AdminUserManager />
                 </TabsContent>
             </Tabs>
         </div>
