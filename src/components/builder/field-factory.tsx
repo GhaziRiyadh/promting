@@ -44,16 +44,24 @@ export const FieldFactory: React.FC<FieldFactoryProps> = ({ field, value, onChan
                     />
                 );
             case 'select':
-                const options = field.options as Record<string, string> | null;
+                const options = Array.isArray(field.options) ? field.options : [];
                 return (
                     <Select value={value || ''} onValueChange={onChange}>
                         <SelectTrigger id={field.key}>
                             <SelectValue placeholder={placeholder || "Select..."} />
                         </SelectTrigger>
                         <SelectContent>
-                            {options && Object.entries(options).map(([val, label]) => (
-                                <SelectItem key={val} value={val}>{label}</SelectItem>
-                            ))}
+                            {options.map((opt: any, idx: number) => {
+                                const optVal = typeof opt === 'object' ? opt.value : opt;
+                                const optLabel = typeof opt === 'object'
+                                    ? (opt.label_i18n?.[locale] || opt.value)
+                                    : opt;
+                                return (
+                                    <SelectItem key={idx} value={String(optVal)}>
+                                        {optLabel}
+                                    </SelectItem>
+                                );
+                            })}
                         </SelectContent>
                     </Select>
                 );

@@ -8,23 +8,30 @@ export class TemplateStrategy implements PromptGenerationStrategy {
     generate(template: string, inputs: Record<string, any>): string {
         let result = template;
         for (const [key, value] of Object.entries(inputs)) {
-            // Replace {{key}} with value
-            const regex = new RegExp(`{{${key}}}`, 'g');
-            result = result.replace(regex, String(value));
+            const valStr = String(value ?? '');
+            // Use replaceAll for literal strings to avoid regex quantifier issues with braces
+            result = result.replaceAll(`{{${key}}}`, valStr)
+                .replaceAll(`{${key}}`, valStr);
         }
-        // Clean up unused placeholders? Optional.
         return result;
     }
 }
 
 export class ChatStrategy implements PromptGenerationStrategy {
     generate(rolePrompt: string, inputs: Record<string, any>): string {
-        // Basic implementation: Role + Inputs as requirements
-        const parts = [rolePrompt];
+        // Replace {key} and {{key}} in the role prompt itself
+        let processedRole = rolePrompt;
+        for (const [key, value] of Object.entries(inputs)) {
+            const valStr = String(value ?? '');
+            processedRole = processedRole.replaceAll(`{{${key}}}`, valStr)
+                .replaceAll(`{${key}}`, valStr);
+        }
+
+        const parts = [processedRole];
 
         parts.push("\n### User Requirements:");
         for (const [key, value] of Object.entries(inputs)) {
-            if (value) {
+            if (value !== undefined && value !== null && value !== '') {
                 parts.push(`- ${key}: ${value}`);
             }
         }
@@ -32,6 +39,7 @@ export class ChatStrategy implements PromptGenerationStrategy {
         return parts.join("\n");
     }
 }
+
 
 export const strategies: Record<string, PromptGenerationStrategy> = {
     template: new TemplateStrategy(),
