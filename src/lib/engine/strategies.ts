@@ -27,16 +27,7 @@ export class ChatStrategy implements PromptGenerationStrategy {
                 .replaceAll(`{${key}}`, valStr);
         }
 
-        const parts = [processedRole];
-
-        parts.push("\n### User Requirements:");
-        for (const [key, value] of Object.entries(inputs)) {
-            if (value !== undefined && value !== null && value !== '') {
-                parts.push(`- ${key}: ${value}`);
-            }
-        }
-
-        return parts.join("\n");
+        return processedRole;
     }
 }
 

@@ -170,17 +170,49 @@ export function TemplateForm({ template, locale, onClose, onSuccess }: TemplateF
                             <span className="text-xs text-muted-foreground font-medium">✨ Use placeholders like {"{field_key}"}</span>
                         </div>
                         <div className="bg-blue-50 dark:bg-blue-950/30 p-3 rounded-md border border-blue-100 dark:border-blue-900 mb-2">
-                            <p className="text-xs text-blue-700 dark:text-blue-300 leading-relaxed">
-                                💡 <strong>How to use:</strong> Type field keys inside curly braces to inject user input directly into the role prompt.
-                                For example, <code>"You are a specialist in {"{topic}"}..."</code>.
-                                {formData.fields.length > 0 && (
-                                    <span className="block mt-1">
-                                        <strong>Available keys:</strong> {formData.fields.map(f => f.key).filter(k => !!k).map(k => `{${k}}`).join(', ') || 'Add fields below to see keys.'}
-                                    </span>
-                                )}
-                            </p>
+                            <div className="text-xs text-blue-700 dark:text-blue-300 leading-relaxed">
+                                <p className="mb-2">💡 <strong>How to use:</strong> Type field keys inside curly braces to inject user input directly into the role prompt. For example: <code>"You are a specialist in {"{topic}"}..."</code>.</p>
+
+                                <div className="space-y-2 pt-2 border-t border-blue-100 dark:border-blue-900/50">
+                                    <div className="flex flex-wrap gap-2 items-center">
+                                        <span className="font-semibold shrink-0">Available keys:</span>
+                                        {formData.fields.length > 0 ? (
+                                            formData.fields.map(f => f.key).filter(k => !!k).map((k, i) => (
+                                                <button
+                                                    key={i}
+                                                    type="button"
+                                                    onClick={() => {
+                                                        const el = document.getElementById('role-prompt-area') as HTMLTextAreaElement;
+                                                        if (el) {
+                                                            const start = el.selectionStart;
+                                                            const end = el.selectionEnd;
+                                                            const text = el.value;
+                                                            const before = text.substring(0, start);
+                                                            const after = text.substring(end, text.length);
+                                                            const insertion = `{${k}}`;
+                                                            setFormData(prev => ({ ...prev, rolePrompt: before + insertion + after }));
+                                                            setTimeout(() => {
+                                                                el.focus();
+                                                                el.setSelectionRange(start + insertion.length, start + insertion.length);
+                                                            }, 0);
+                                                        }
+                                                    }}
+                                                    className="px-1.5 py-0.5 bg-blue-100 dark:bg-blue-900 rounded border border-blue-200 dark:border-blue-800 hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors font-mono"
+                                                    title="Click to insert"
+                                                >
+                                                    {`{${k}}`}
+                                                </button>
+                                            ))
+                                        ) : (
+                                            <span className="text-blue-500 italic">None yet. Add fields below.</span>
+                                        )}
+                                    </div>
+                                    <p className="text-[10px] opacity-80 italic">Click any key above to insert it at your cursor position in the Role Prompt area below.</p>
+                                </div>
+                            </div>
                         </div>
                         <Textarea
+                            id="role-prompt-area"
                             value={formData.rolePrompt}
                             onChange={e => setFormData(prev => ({ ...prev, rolePrompt: e.target.value }))}
                             placeholder="e.g. You are a professional blog writer. You will write about {topic}..."
