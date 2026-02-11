@@ -10,7 +10,34 @@
     "Builder": {
         "generate": "Generate Prompt",
         "copy": "Copy to Clipboard",
-        "save": "Save Prompt"
+        "save": "Save Prompt",
+        "save_loading": "Saving..."
+    },
+    "Dashboard": {
+        "title": "Dashboard",
+        "manage": "Manage your saved prompts.",
+        "newPrompt": "New Prompt",
+        "noPrompts": "No prompts created",
+        "noPromptsDesc": "You haven't created any prompts yet. Start by creating a new one from a template.",
+        "createPrompt": "Create Prompt",
+        "edit": "Edit",
+        "updated": "Updated"
+    },
+    "Sidebar": {
+        "dashboard": "Dashboard",
+        "overview": "Overview",
+        "newPrompt": "New Prompt",
+        "admin": "Admin",
+        "adminPanel": "Admin Panel"
+    },
+    "Navbar": {
+        "dashboard": "Dashboard",
+        "signOut": "Sign out",
+        "login": "Login",
+        "toggleTheme": "Toggle theme",
+        "light": "Light",
+        "dark": "Dark",
+        "system": "System"
     },
     "Landing": {
         "hero": {

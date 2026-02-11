@@ -6,10 +6,17 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardFooter, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { FileText, Plus } from "lucide-react";
+import { getTranslations } from "next-intl/server";
 
 
-export default async function DashboardPage() {
+export default async function DashboardPage({
+    params
+}: {
+    params: Promise<{ locale: string }>
+}) {
+    const { locale } = await params;
     const session = await getServerSession(authOptions);
+    const t = await getTranslations("Dashboard");
 
     if (!session) {
         redirect("/auth/login");
@@ -29,17 +36,17 @@ export default async function DashboardPage() {
 
     return (
         <div className="container mx-auto py-10 px-4">
-            <div className="flex items-center justify-between mb-8">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 gap-4">
                 <div>
-                    <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
+                    <h1 className="text-3xl font-bold tracking-tight">{t('title')}</h1>
                     <p className="text-muted-foreground">
-                        Manage your saved prompts.
+                        {t('manage')}
                     </p>
                 </div>
-                <Button asChild>
+                <Button asChild className="w-full sm:w-auto">
                     <Link href="/dashboard/prompts/new">
-                        <Plus className="mr-2 h-4 w-4" />
-                        New Prompt
+                        <Plus className="me-2 h-4 w-4" />
+                        {t('newPrompt')}
                     </Link>
                 </Button>
             </div>
@@ -49,12 +56,12 @@ export default async function DashboardPage() {
                     <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-muted">
                         <FileText className="h-5 w-5" />
                     </div>
-                    <h3 className="mt-4 text-lg font-semibold">No prompts created</h3>
+                    <h3 className="mt-4 text-lg font-semibold">{t('noPrompts')}</h3>
                     <p className="mb-4 mt-2 text-sm text-muted-foreground max-w-sm">
-                        You haven't created any prompts yet. Start by creating a new one from a template.
+                        {t('noPromptsDesc')}
                     </p>
                     <Button asChild>
-                        <Link href="/dashboard/prompts/new">Create Prompt</Link>
+                        <Link href="/dashboard/prompts/new">{t('createPrompt')}</Link>
                     </Button>
                 </div>
             ) : (
@@ -62,24 +69,28 @@ export default async function DashboardPage() {
                     {prompts.map((prompt) => (
                         <Card key={prompt.id} className="flex flex-col">
                             <CardHeader>
-                                <CardTitle>{prompt.title}</CardTitle>
+                                <CardTitle className="truncate">{prompt.title}</CardTitle>
                                 <CardDescription>
-                                    {(prompt.promptType.name_i18n as any)?.en || prompt.promptType.key}
+                                    {(prompt.promptType.name_i18n as any)?.[locale] || (prompt.promptType.name_i18n as any)?.en || prompt.promptType.key}
                                 </CardDescription>
                             </CardHeader>
                             <CardContent className="flex-1">
-                                <p className="text-sm text-muted-foreground line-clamp-3">
+                                <p className="text-sm text-muted-foreground line-clamp-3 h-18">
                                     {prompt.finalPrompt}
                                 </p>
                             </CardContent>
-                            <CardFooter className="flex justify-between">
+                            <CardFooter className="flex justify-between items-center border-t py-4">
                                 <Button variant="ghost" size="sm" asChild>
                                     <Link href={`/dashboard/prompts/${prompt.id}/edit`}>
-                                        Edit
+                                        {t('edit')}
                                     </Link>
                                 </Button>
-                                <span className="text-xs text-muted-foreground">
-                                    {new Date(prompt.updatedAt).toLocaleDateString()}
+                                <span className="text-xs text-muted-foreground italic">
+                                    {new Date(prompt.updatedAt).toLocaleDateString(locale, {
+                                        year: 'numeric',
+                                        month: 'short',
+                                        day: 'numeric'
+                                    })}
                                 </span>
                             </CardFooter>
                         </Card>

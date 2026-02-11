@@ -10,7 +10,34 @@
     "Builder": {
         "generate": "توليد الأمر",
         "copy": "نسخ إلى الحافظة",
-        "save": "حفظ الأمر"
+        "save": "حفظ الأمر",
+        "save_loading": "جاري الحفظ..."
+    },
+    "Dashboard": {
+        "title": "لوحة التحكم",
+        "manage": "إدارة أوامرك المحفوظة.",
+        "newPrompt": "أمر جديد",
+        "noPrompts": "لم يتم إنشاء أي أوامر",
+        "noPromptsDesc": "لم تقم بإنشاء أي أوامر بعد. ابدأ بإنشاء أمر جديد من قالب.",
+        "createPrompt": "إنشاء أمر",
+        "edit": "تعديل",
+        "updated": "تم التحديث"
+    },
+    "Sidebar": {
+        "dashboard": "لوحة التحكم",
+        "overview": "نظرة عامة",
+        "newPrompt": "أمر جديد",
+        "admin": "الإدارة",
+        "adminPanel": "لوحة الإدارة"
+    },
+    "Navbar": {
+        "dashboard": "لوحة التحكم",
+        "signOut": "تسجيل الخروج",
+        "login": "تسجيل الدخول",
+        "toggleTheme": "تغيير المظهر",
+        "light": "فاتح",
+        "dark": "داكن",
+        "system": "النظام"
     },
     "Landing": {
         "hero": {
