@@ -27,7 +27,10 @@ export async function POST(req: Request) {
         const adapter = adapters[0];
 
         // Construct meta-prompt
-        const fieldsDesc = fields.map(f => `- ${f.key} (${f.type}): ${f.label}`).join('\n');
+        const fieldsDesc = fields.map(f => {
+            const label = (f.label_i18n as any)?.en || (f.label_i18n as any)?.ar || f.key;
+            return `- ${f.key} (${f.type}): ${label}`;
+        }).join('\n');
 
         const metaPrompt = `
 You are an intelligent assistant that helps users fill out forms to generate AI prompts.

@@ -9,6 +9,14 @@ import { Button } from '@/components/ui/button';
 import { useTranslations } from 'next-intl';
 import { useRouter } from '@/i18n/routing';
 
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
+
 interface BuilderInterfaceProps {
     promptType: PromptType & { fields: PromptField[] };
     locale: string;
@@ -19,6 +27,31 @@ export function BuilderInterface({ promptType, locale }: BuilderInterfaceProps) 
     const t = useTranslations('Builder');
     const router = useRouter();
     const [saving, setSaving] = useState(false);
+    
+    // Model Selection State
+    const [model, setModel] = useState<string>('');
+    const [availableModels, setAvailableModels] = useState<{ id: string, name: string, providerId: string }[]>([]);
+    const [isLoadingModels, setIsLoadingModels] = useState(true);
+
+    React.useEffect(() => {
+        const fetchModels = async () => {
+            try {
+                const res = await fetch('/api/models');
+                if (res.ok) {
+                    const data = await res.json();
+                    setAvailableModels(data.models || []);
+                    if (data.models && data.models.length > 0) {
+                        setModel(data.models[0].id);
+                    }
+                }
+            } catch (e) {
+                console.error('Error fetching models:', e);
+            } finally {
+                setIsLoadingModels(false);
+            }
+        };
+        fetchModels();
+    }, []);
 
     // AI Feature States
     const [isRefining, setIsRefining] = useState(false);
@@ -76,7 +109,8 @@ export function BuilderInterface({ promptType, locale }: BuilderInterfaceProps) 
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     prompt: refinedPrompt || generatedPrompt,
-                    instructions: refinementInstructions
+                    instructions: refinementInstructions,
+                    modelId: model // Pass selected model
                 })
             });
             const data = await res.json();
@@ -103,7 +137,7 @@ export function BuilderInterface({ promptType, locale }: BuilderInterfaceProps) 
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     prompt: promptToRun,
-                    model: 'default' // Let the backend pick or use a selector if we add one
+                    modelId: model || 'default'
                 })
             });
             const data = await res.json();
@@ -128,7 +162,8 @@ export function BuilderInterface({ promptType, locale }: BuilderInterfaceProps) 
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     promptType: promptType,
-                    userDescription: autoFillDescription
+                    userDescription: autoFillDescription,
+                    modelId: model // Pass selected model
                 })
             });
             const data = await res.json();
@@ -263,6 +298,23 @@ export function BuilderInterface({ promptType, locale }: BuilderInterfaceProps) 
                         >
                             {isTesting ? 'Running...' : 'Test Run'}
                         </Button>
+                        
+                        {/* Model Selector */}
+                        <Select value={model} onValueChange={setModel} disabled={isLoadingModels}>
+                            <SelectTrigger className="w-fit h-9 py-1.5 px-3 text-xs font-medium rounded-full bg-secondary/50 border-0 hover:bg-secondary/80 transition-colors gap-2">
+                                <SelectValue placeholder={isLoadingModels ? "Loading..." : "Select Model"} />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {availableModels.map((m) => (
+                                    <SelectItem key={m.id} value={m.id}>
+                                        {m.name}
+                                    </SelectItem>
+                                ))}
+                                {availableModels.length === 0 && !isLoadingModels && (
+                                    <SelectItem value="loading" disabled>No models available</SelectItem>
+                                )}
+                            </SelectContent>
+                        </Select>
 
                         <div className="flex gap-2">
                             <Button onClick={handleCopy} variant="outline">

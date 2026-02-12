@@ -19,7 +19,7 @@ export class DeepSeekAdapter implements AIModelAdapter {
                     'Authorization': `Bearer ${apiKey}`,
                 },
                 body: JSON.stringify({
-                    model: 'deepseek-chat',
+                    model: (modelId?.includes(':') ? modelId.split(':')[1] : modelId) || 'deepseek-chat',
                     messages: [{ role: 'user', content: prompt }],
                     temperature: 0.7,
                 }),

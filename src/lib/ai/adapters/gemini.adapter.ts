@@ -13,8 +13,11 @@ export class GeminiAdapter implements AIModelAdapter {
 
         try {
             const genAI = new GoogleGenerativeAI(apiKey);
-            // Use provided modelId or default
-            const modelName = modelId || 'gemini-2.0-flash';
+            // Use provided modelId or default, stripping any potential prefix
+            let modelName = modelId || 'gemini-1.5-flash';
+            if (modelName.includes(':')) {
+                modelName = modelName.split(':')[1];
+            }
             const model = genAI.getGenerativeModel({ model: modelName });
 
             const result = await model.generateContent(prompt);
@@ -48,7 +51,11 @@ export class GeminiAdapter implements AIModelAdapter {
             return [];
         } catch (error) {
             console.error('Failed to list Gemini models:', error);
-            return [];
+            // Fallback to known models if API fails (e.g. connectivity issues)
+            return [
+                { id: 'gemini-1.5-flash', name: 'Gemini 1.5 Flash' },
+                { id: 'gemini-pro', name: 'Gemini Pro' }
+            ];
         }
     }
 }

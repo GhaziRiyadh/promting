@@ -18,7 +18,7 @@ export class OpenAIAdapter implements AIModelAdapter {
                     'Authorization': `Bearer ${apiKey}`,
                 },
                 body: JSON.stringify({
-                    model: 'gpt-4o',
+                    model: (modelId?.includes(':') ? modelId.split(':')[1] : modelId) || 'gpt-4o',
                     messages: [{ role: 'user', content: prompt }],
                     temperature: 0.7,
                 }),

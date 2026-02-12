@@ -11,6 +11,7 @@ const geminiAdapter = new GeminiAdapter();
 const mockAdapter = new MockAdapter();
 
 // Register adapters
+// Register adapters
 // modelRegistry.register(openaiAdapter);
 // modelRegistry.register(deepseekAdapter);
 modelRegistry.register(geminiAdapter);

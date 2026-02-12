@@ -75,3 +75,15 @@ model GlobalKeyword {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+model AIModel {
+  id          String   @id @default(uuid())
+  name        String
+  providerId  String   // e.g. 'google', 'openai'
+  modelId     String   // e.g. 'gemini-1.5-flash', 'gpt-4o'
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@unique([providerId, modelId])
+}

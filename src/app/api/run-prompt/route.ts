@@ -15,9 +15,12 @@ export async function POST(req: NextRequest) {
 
         // 2. Parse Body
         const body = await req.json();
-        const { model, prompt } = body;
+        const { modelId, prompt } = body;
 
-        if (!model || typeof model !== 'string') {
+        // Support 'model' as fallback for backward compatibility if needed, or just enforce modelId
+        const paramsModelId = modelId || body.model;
+
+        if (!paramsModelId || typeof paramsModelId !== 'string') {
             return NextResponse.json(
                 { error: 'Invalid model ID provided.' },
                 { status: 400 }
@@ -25,7 +28,7 @@ export async function POST(req: NextRequest) {
         }
 
         // Parse composite ID "adapterId:modelId"
-        const [adapterId, modelId] = model.split(':');
+        const [adapterId, suffix] = paramsModelId.split(':');
 
         if (!adapterId) {
             return NextResponse.json(
@@ -51,8 +54,8 @@ export async function POST(req: NextRequest) {
         // 3. Get Adapter and Run
         try {
             const adapter = modelRegistry.get(adapterId);
-            // Pass modelId (if available) to the adapter
-            const result = await adapter.run(prompt, modelId === 'default' ? undefined : modelId);
+            // Pass modelId (suffix) to the adapter
+            const result = await adapter.run(prompt, suffix === 'default' ? undefined : suffix);
 
             return NextResponse.json({ result });
         } catch (adapterError: any) {

@@ -1,9 +1,20 @@
 import { NextResponse } from 'next/server';
-import { modelRegistry } from '@/lib/ai';
+import { prisma } from '@/lib/prisma';
 
 export async function GET() {
     try {
-        const models = await modelRegistry.getAllModels();
+        const dbModels = await prisma.aIModel.findMany({
+            where: { isActive: true },
+            orderBy: { providerId: 'asc' }
+        });
+
+        // Map to expected format: id (providerId:modelId), name
+        const models = dbModels.map(m => ({
+            id: `${m.providerId}:${m.modelId}`,
+            name: m.name,
+            providerId: m.providerId
+        }));
+
         return NextResponse.json({ models });
     } catch (error) {
         console.error('Error fetching models:', error);

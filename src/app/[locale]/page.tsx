@@ -139,11 +139,8 @@ export default function HomePage() {
                             </h2>
                         </div>
                         <div className="flex flex-col space-y-2">
-                            <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                                Select Model
-                            </label>
                             <Select value={model} onValueChange={setModel} disabled={isLoadingModels}>
-                                <SelectTrigger>
+                                <SelectTrigger className="w-fit h-auto py-1.5 px-3 text-xs font-medium rounded-full bg-secondary/50 border-0 hover:bg-secondary/80 transition-colors gap-2">
                                     <SelectValue placeholder={isLoadingModels ? "Loading..." : "Select Model"} />
                                 </SelectTrigger>
                                 <SelectContent>
