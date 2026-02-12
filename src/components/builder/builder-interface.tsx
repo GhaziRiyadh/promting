@@ -8,6 +8,8 @@ import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/componen
 import { Button } from '@/components/ui/button';
 import { useTranslations } from 'next-intl';
 import { useRouter } from '@/i18n/routing';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 import {
     Select,
@@ -140,12 +142,42 @@ export function BuilderInterface({ promptType, locale }: BuilderInterfaceProps) 
                     modelId: model || 'default'
                 })
             });
-            const data = await res.json();
-            if (data.result) {
-                setTestResult(data.result);
-            } else if (data.error) {
-                setTestResult(`Error: ${data.error}`);
+
+            if (!res.ok) {
+                const data = await res.json();
+                setTestResult(`Error: ${data.error || res.statusText}`);
+                return;
             }
+
+            if (!res.body) return;
+
+            const reader = res.body.getReader();
+            const decoder = new TextDecoder();
+            let done = false;
+
+            while (!done) {
+                const { value, done: doneReading } = await reader.read();
+                done = doneReading;
+                const chunkValue = decoder.decode(value, { stream: !done });
+                
+                // If the response is a JSON object (fallback for non-streaming), handle it
+                if (chunkValue.trim().startsWith('{') && chunkValue.trim().endsWith('}')) {
+                     try {
+                        const json = JSON.parse(chunkValue);
+                        if (json.result) {
+                            setTestResult(json.result);
+                        } else if (json.error) {
+                            setTestResult(`Error: ${json.error}`);
+                        }
+                        return;
+                     } catch(e) {
+                         // Not JSON, treat as stream chunk
+                     }
+                }
+
+                setTestResult((prev) => prev + chunkValue);
+            }
+
         } catch (e) {
             setTestResult("Failed to execute prompt.");
         } finally {
@@ -334,8 +366,10 @@ export function BuilderInterface({ promptType, locale }: BuilderInterfaceProps) 
                             <CardTitle>Test Result</CardTitle>
                         </CardHeader>
                         <CardContent>
-                            <div className="bg-muted/50 p-4 rounded-md text-sm whitespace-pre-wrap">
-                                {testResult}
+                            <div className="bg-muted/50 p-4 rounded-md text-sm overflow-auto prose prose-sm dark:prose-invert max-w-none prose-p:leading-relaxed prose-pre:bg-stone-900 prose-pre:text-stone-50">
+                                <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                                    {testResult}
+                                </ReactMarkdown>
                             </div>
                         </CardContent>
                     </Card>

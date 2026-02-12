@@ -31,6 +31,35 @@ export class GeminiAdapter implements AIModelAdapter {
         }
     }
 
+    async stream(prompt: string, modelId?: string): Promise<ReadableStream<Uint8Array>> {
+        const apiKey = process.env.GEMINI_API_KEY;
+        if (!apiKey) {
+            throw new Error('GEMINI_API_KEY is not configured');
+        }
+
+        const genAI = new GoogleGenerativeAI(apiKey);
+        // Use provided modelId or default, stripping any potential prefix
+        let modelName = modelId || 'gemini-1.5-flash';
+        if (modelName.includes(':')) {
+            modelName = modelName.split(':')[1];
+        }
+        const model = genAI.getGenerativeModel({ model: modelName });
+
+        const result = await model.generateContentStream(prompt);
+
+        const stream = new ReadableStream({
+            async start(controller) {
+                for await (const chunk of result.stream) {
+                    const chunkText = chunk.text();
+                    controller.enqueue(new TextEncoder().encode(chunkText));
+                }
+                controller.close();
+            }
+        });
+
+        return stream;
+    }
+
     async listModels(): Promise<{ id: string; name: string }[]> {
         const apiKey = process.env.GEMINI_API_KEY;
         if (!apiKey) return [];

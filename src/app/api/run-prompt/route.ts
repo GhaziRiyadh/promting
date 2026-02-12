@@ -51,32 +51,29 @@ export async function POST(req: NextRequest) {
             );
         }
 
-        // 3. Get Adapter and Run
-        try {
-            const adapter = modelRegistry.get(adapterId);
-            // Pass modelId (suffix) to the adapter
-            const result = await adapter.run(prompt, suffix === 'default' ? undefined : suffix);
-
-            return NextResponse.json({ result });
-        } catch (adapterError: any) {
-            console.error('AI Adapter Error:', adapterError);
-            // Distinguish between "Model not found" and execution errors if needed
-            if (adapterError.message.includes('Model adapter not found')) {
-                return NextResponse.json(
-                    { error: 'Invalid model selected.' },
-                    { status: 400 }
-                );
-            }
-            return NextResponse.json(
-                { error: 'Failed to generate response from AI model.' },
-                { status: 500 }
-            );
+        // 3. Get Adapter and Stream
+        const adapter = modelRegistry.get(adapterId);
+        
+        // Check if adapter supports streaming
+        if (!adapter.stream) {
+             // Fallback to non-streaming if stream is not implemented
+             const result = await adapter.run(prompt, suffix === 'default' ? undefined : suffix);
+             return NextResponse.json({ result });
         }
 
-    } catch (error) {
+        const stream = await adapter.stream(prompt, suffix === 'default' ? undefined : suffix);
+
+        return new NextResponse(stream, {
+            headers: {
+                'Content-Type': 'text/plain; charset=utf-8',
+                'Transfer-Encoding': 'chunked',
+            },
+        });
+
+    } catch (error: any) {
         console.error('API Error:', error);
         return NextResponse.json(
-            { error: 'Internal Server Error' },
+            { error: error.message || 'Internal Server Error' },
             { status: 500 }
         );
     }
