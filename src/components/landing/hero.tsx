@@ -1,13 +1,13 @@
-'use client';
-
+import { useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, Sparkles } from 'lucide-react';
+import { ArrowRight, Sparkles, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 
 export function Hero() {
     const t = useTranslations('Landing.hero');
+    const { data: session, status } = useSession();
 
     const scrollToFeatures = () => {
         const element = document.getElementById('features');
@@ -38,12 +38,26 @@ export function Hero() {
 
                         {/* CTA Buttons */}
                         <div className="flex flex-col gap-3 sm:flex-row">
-                            <Button asChild size="lg" className="text-base group">
-                                <Link href="/auth/register">
-                                    {t('ctaPrimary')}
-                                    <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-                                </Link>
-                            </Button>
+                            {status === 'loading' ? (
+                                <Button size="lg" disabled>
+                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                    Loading...
+                                </Button>
+                            ) : session ? (
+                                <Button asChild size="lg" className="text-base group">
+                                    <Link href="/dashboard">
+                                        Go to Dashboard
+                                        <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                                    </Link>
+                                </Button>
+                            ) : (
+                                <Button asChild size="lg" className="text-base group">
+                                    <Link href="/auth/register">
+                                        {t('ctaPrimary')}
+                                        <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                                    </Link>
+                                </Button>
+                            )}
                             <Button
                                 onClick={scrollToFeatures}
                                 variant="outline"

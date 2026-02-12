@@ -1,7 +1,8 @@
 'use client';
 
+import { useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, Loader2 } from 'lucide-react';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { ModeToggle } from '@/components/mode-toggle';
@@ -10,6 +11,7 @@ import Link from 'next/link';
 export function Header() {
     const t = useTranslations('Landing.nav');
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const { data: session, status } = useSession();
 
     const scrollToSection = (sectionId: string) => {
         const element = document.getElementById(sectionId);
@@ -63,9 +65,20 @@ export function Header() {
                 {/* Right Side Actions */}
                 <div className="flex items-center gap-2">
                     <ModeToggle />
-                    <Button asChild className="hidden md:inline-flex">
-                        <Link href="/auth/login">Sign In</Link>
-                    </Button>
+
+                    {status === 'loading' ? (
+                        <Button variant="ghost" size="sm" className="hidden md:inline-flex" disabled>
+                            <Loader2 className="h-4 w-4 animate-spin" />
+                        </Button>
+                    ) : session ? (
+                        <Button asChild className="hidden md:inline-flex">
+                            <Link href="/dashboard">Dashboard</Link>
+                        </Button>
+                    ) : (
+                        <Button asChild className="hidden md:inline-flex">
+                            <Link href="/auth/login">Sign In</Link>
+                        </Button>
+                    )}
 
                     {/* Mobile Menu Button */}
                     <button
@@ -106,9 +119,21 @@ export function Header() {
                         >
                             {t('contact')}
                         </button>
-                        <Button asChild className="w-full">
-                            <Link href="/auth/login">Sign In</Link>
-                        </Button>
+
+                        {status === 'loading' ? (
+                            <Button disabled className="w-full">
+                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                Loading...
+                            </Button>
+                        ) : session ? (
+                            <Button asChild className="w-full">
+                                <Link href="/dashboard">Dashboard</Link>
+                            </Button>
+                        ) : (
+                            <Button asChild className="w-full">
+                                <Link href="/auth/login">Sign In</Link>
+                            </Button>
+                        )}
                     </nav>
                 </div>
             )}

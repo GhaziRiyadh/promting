@@ -1,12 +1,12 @@
-'use client';
-
+import { useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 
 export function CtaSection() {
     const t = useTranslations('Landing.cta');
+    const { data: session, status } = useSession();
 
     return (
         <section className="py-16 md:py-24 bg-linear-to-br from-primary/10 via-primary/5 to-background px-4 md:px-6 lg:px-8">
@@ -27,17 +27,36 @@ export function CtaSection() {
                             {t('subtitle')}
                         </p>
                         <div className="flex justify-center pt-4">
-                            <Button
-                                asChild
-                                size="lg"
-                                variant="secondary"
-                                className="text-base group shadow-lg"
-                            >
-                                <Link href="/auth/register">
-                                    {t('button')}
-                                    <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-                                </Link>
-                            </Button>
+                            {status === 'loading' ? (
+                                <Button size="lg" variant="secondary" disabled>
+                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                    Loading...
+                                </Button>
+                            ) : session ? (
+                                <Button
+                                    asChild
+                                    size="lg"
+                                    variant="secondary"
+                                    className="text-base group shadow-lg"
+                                >
+                                    <Link href="/dashboard">
+                                        Go to Dashboard
+                                        <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                                    </Link>
+                                </Button>
+                            ) : (
+                                <Button
+                                    asChild
+                                    size="lg"
+                                    variant="secondary"
+                                    className="text-base group shadow-lg"
+                                >
+                                    <Link href="/auth/register">
+                                        {t('button')}
+                                        <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                                    </Link>
+                                </Button>
+                            )}
                         </div>
                     </div>
                 </div>
