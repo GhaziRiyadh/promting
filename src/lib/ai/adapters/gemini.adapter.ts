@@ -1,11 +1,13 @@
 import { AIModelAdapter } from '../core/ai-model.interface';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
+import { prisma } from '@/lib/prisma';
+
 export class GeminiAdapter implements AIModelAdapter {
     id = 'google-gemini-pro';
     name = 'Gemini 1.5 Flash';
 
-    async run(prompt: string, modelId?: string): Promise<string> {
+    async run(prompt: string, modelId?: string, context?: { type: string, userId?: string }): Promise<string> {
         const apiKey = process.env.GEMINI_API_KEY;
         if (!apiKey) {
             throw new Error('GEMINI_API_KEY is not configured');
@@ -24,6 +26,20 @@ export class GeminiAdapter implements AIModelAdapter {
             const response = await result.response;
             const text = response.text();
 
+            // Log interaction
+            if (context) {
+                await prisma.aILog.create({
+                    data: {
+                        prompt,
+                        response: text,
+                        modelId: modelName,
+                        providerId: 'google',
+                        type: context.type,
+                        userId: context.userId
+                    }
+                });
+            }
+
             return text;
         } catch (error) {
             console.error('Gemini Adapter Error:', error);
@@ -31,7 +47,7 @@ export class GeminiAdapter implements AIModelAdapter {
         }
     }
 
-    async stream(prompt: string, modelId?: string): Promise<ReadableStream<Uint8Array>> {
+    async stream(prompt: string, modelId?: string, context?: { type: string, userId?: string }): Promise<ReadableStream<Uint8Array>> {
         const apiKey = process.env.GEMINI_API_KEY;
         if (!apiKey) {
             throw new Error('GEMINI_API_KEY is not configured');
@@ -49,10 +65,27 @@ export class GeminiAdapter implements AIModelAdapter {
 
         const stream = new ReadableStream({
             async start(controller) {
+                let fullResponse = '';
                 for await (const chunk of result.stream) {
                     const chunkText = chunk.text();
+                    fullResponse += chunkText;
                     controller.enqueue(new TextEncoder().encode(chunkText));
                 }
+                
+                // Log interaction after stream completes
+                if (context) {
+                    await prisma.aILog.create({
+                        data: {
+                            prompt,
+                            response: fullResponse,
+                            modelId: modelName,
+                            providerId: 'google',
+                            type: context.type,
+                            userId: context.userId
+                        }
+                    });
+                }
+                
                 controller.close();
             }
         });

@@ -44,7 +44,10 @@ User Instructions:
 Return ONLY the refined prompt text. Do not include explanations, quotes, or markdown formatting unless part of the prompt itself.
 `;
 
-        const refinedPrompt = await adapter.run(metaPrompt, modelId);
+        const refinedPrompt = await adapter.run(metaPrompt, modelId, {
+            type: 'REFINEMENT',
+            userId: session?.user?.id
+        });
 
         return NextResponse.json({ refinedPrompt });
     } catch (error: any) {

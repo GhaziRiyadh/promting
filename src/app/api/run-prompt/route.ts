@@ -1,9 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { modelRegistry } from '@/lib/ai';
 import { rateLimiter } from '@/lib/rate-limiter';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
 
 export async function POST(req: NextRequest) {
     try {
+        const session = await getServerSession(authOptions);
+
         // 1. Rate Limiting
         const ip = req.headers.get('x-forwarded-for') || 'unknown';
         if (!rateLimiter.check(ip)) {
@@ -54,14 +58,16 @@ export async function POST(req: NextRequest) {
         // 3. Get Adapter and Stream
         const adapter = modelRegistry.get(adapterId);
         
+        const context = { type: 'TESTING', userId: session?.user?.id };
+
         // Check if adapter supports streaming
         if (!adapter.stream) {
              // Fallback to non-streaming if stream is not implemented
-             const result = await adapter.run(prompt, suffix === 'default' ? undefined : suffix);
+             const result = await adapter.run(prompt, suffix === 'default' ? undefined : suffix, context);
              return NextResponse.json({ result });
         }
 
-        const stream = await adapter.stream(prompt, suffix === 'default' ? undefined : suffix);
+        const stream = await adapter.stream(prompt, suffix === 'default' ? undefined : suffix, context);
 
         return new NextResponse(stream, {
             headers: {

@@ -87,3 +87,17 @@ model AIModel {
   
   @@unique([providerId, modelId])
 }
+
+model AILog {
+  id          String   @id @default(uuid())
+  prompt      String   @db.Text
+  response    String   @db.Text
+  modelId     String
+  providerId  String
+  type        String   // e.g., 'GENERATION', 'REFINEMENT', 'TESTING'
+  userId      String?
+  tokensIn    Int?
+  tokensOut   Int?
+  durationMs  Int?
+  createdAt   DateTime @default(now())
+}

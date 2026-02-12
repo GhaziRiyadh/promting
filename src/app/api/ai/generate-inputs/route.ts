@@ -19,12 +19,14 @@ export async function POST(req: Request) {
 
         const fields = promptType.fields as PromptField[];
 
-        // simple strategy: get the first available adapter
-        const adapters = Array.from(modelRegistry.getAll().values());
-        if (adapters.length === 0) {
-            return NextResponse.json({ error: 'No AI models available' }, { status: 503 });
+        // 1. Extract adapterId and suffix from modelId
+        const [adapterId, suffix = 'default'] = modelId.split(':');
+
+        // 2. Get the AI adapter
+        const adapter = modelRegistry.get(adapterId);
+        if (!adapter) {
+            return NextResponse.json({ error: `AI model adapter '${adapterId}' not found` }, { status: 404 });
         }
-        const adapter = adapters[0];
 
         // Construct meta-prompt
         const fieldsDesc = fields.map(f => {
