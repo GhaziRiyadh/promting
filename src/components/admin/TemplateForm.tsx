@@ -380,7 +380,7 @@ export function TemplateForm({ template, locale, onClose, onSuccess }: TemplateF
                                                             onChange={e => {
                                                                 const options = Array.isArray(field.options) ? field.options : [];
                                                                 const newOpts = [...options];
-                                                                newOpts[optIdx] = { ...newOpts[optIdx], value: e.target.value };
+                                                                newOpts[optIdx] = { ...(newOpts[optIdx] as any), value: e.target.value };
                                                                 handleFieldChange(index, 'options', newOpts);
                                                             }}
                                                         />
@@ -393,7 +393,7 @@ export function TemplateForm({ template, locale, onClose, onSuccess }: TemplateF
                                                             onChange={e => {
                                                                 const options = Array.isArray(field.options) ? field.options : [];
                                                                 const newOpts = [...options];
-                                                                newOpts[optIdx] = { ...newOpts[optIdx], label_i18n: { ...newOpts[optIdx].label_i18n, en: e.target.value } };
+                                                                newOpts[optIdx] = { ...(newOpts[optIdx] as any), label_i18n: { ...(newOpts[optIdx] as any).label_i18n, en: e.target.value } };
                                                                 handleFieldChange(index, 'options', newOpts);
                                                             }}
                                                         />
@@ -407,7 +407,7 @@ export function TemplateForm({ template, locale, onClose, onSuccess }: TemplateF
                                                             onChange={e => {
                                                                 const options = Array.isArray(field.options) ? field.options : [];
                                                                 const newOpts = [...options];
-                                                                newOpts[optIdx] = { ...newOpts[optIdx], label_i18n: { ...newOpts[optIdx].label_i18n, ar: e.target.value } };
+                                                                newOpts[optIdx] = { ...(newOpts[optIdx] as any), label_i18n: { ...(newOpts[optIdx] as any).label_i18n, ar: e.target.value } };
                                                                 handleFieldChange(index, 'options', newOpts);
                                                             }}
                                                         />
