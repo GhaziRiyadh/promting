@@ -13,6 +13,7 @@ interface BuilderPageProps {
 
 export default async function BuilderPage({ params }: BuilderPageProps) {
     const { id, locale } = await params;
+
     const session = await getServerSession(authOptions);
 
     if (!session) {
