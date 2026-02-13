@@ -41,10 +41,10 @@
     },
     "Landing": {
         "hero": {
-            "headline": "Create AI Prompts with Ease",
-            "subheadline": "Generate and customize AI prompts in minutes without coding.",
-            "ctaPrimary": "Try It Now",
-            "ctaSecondary": "Learn More"
+            "headline": "Master the Art of AI Prompting",
+            "subheadline": "Design, refine, and manage powerful AI prompts for any model. Elevate your workflow with our advanced prompt engineering tools.",
+            "ctaPrimary": "Start Building Free",
+            "ctaSecondary": "Explore Features"
         },
         "features": {
             "title": "Key Features",

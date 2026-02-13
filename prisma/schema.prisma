@@ -101,3 +101,15 @@ model AILog {
   durationMs  Int?
   createdAt   DateTime @default(now())
 }
+
+model LandingContent {
+  id        String   @id @default(uuid())
+  section   String   // e.g., 'hero'
+  key       String   // e.g., 'headline'
+  content   Json     // { "en": "...", "ar": "..." }
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([section, key])
+}

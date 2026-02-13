@@ -5,7 +5,16 @@ import { ArrowRight, Sparkles, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 
-export function Hero() {
+interface HeroProps {
+    content?: {
+        headline: string;
+        subheadline: string;
+        ctaPrimary: string;
+        ctaSecondary: string;
+    };
+}
+
+export function Hero({ content }: HeroProps) {
     const t = useTranslations('Landing.hero');
     const { data: session, status } = useSession();
 
@@ -29,10 +38,10 @@ export function Hero() {
                                 AI-Powered Prompt Builder
                             </div>
                             <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl bg-linear-to-r from-primary to-primary/60 bg-clip-text text-transparent">
-                                {t('headline')}
+                                {content?.headline || t('headline')}
                             </h1>
                             <p className="text-lg text-muted-foreground sm:text-xl max-w-[600px]">
-                                {t('subheadline')}
+                                {content?.subheadline || t('subheadline')}
                             </p>
                         </div>
 
@@ -53,7 +62,7 @@ export function Hero() {
                             ) : (
                                 <Button asChild size="lg" className="text-base group">
                                     <Link href="/auth/register">
-                                        {t('ctaPrimary')}
+                                        {content?.ctaPrimary || t('ctaPrimary')}
                                         <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
                                     </Link>
                                 </Button>
@@ -64,7 +73,7 @@ export function Hero() {
                                 size="lg"
                                 className="text-base"
                             >
-                                {t('ctaSecondary')}
+                                {content?.ctaSecondary || t('ctaSecondary')}
                             </Button>
                         </div>
 
