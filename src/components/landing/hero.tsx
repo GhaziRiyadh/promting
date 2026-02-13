@@ -18,7 +18,7 @@ export function Hero() {
 
     return (
         <section id="home" className="pt-20 pb-16 md:pt-32 md:pb-24 px-4 md:px-6 lg:px-8">
-            <div className="container">
+            <div className="container mx-auto">
 
                 <div className="grid gap-12 lg:grid-cols-2 lg:gap-16 items-center">
                     {/* Left Column - Content */}

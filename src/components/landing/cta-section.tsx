@@ -10,7 +10,7 @@ export function CtaSection() {
 
     return (
         <section className="py-16 md:py-24 bg-linear-to-br from-primary/10 via-primary/5 to-background px-4 md:px-6 lg:px-8">
-            <div className="container">
+            <div className="container mx-auto">
 
                 <div className="relative overflow-hidden rounded-3xl bg-primary text-primary-foreground p-8 md:p-16">
                     {/* Background Decoration */}

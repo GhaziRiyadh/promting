@@ -101,6 +101,25 @@
             "features": "Features",
             "howItWorks": "How It Works",
             "contact": "Contact"
+        },
+        "playground": {
+            "title": "AI Playground",
+            "selectModel": "Select Model",
+            "loading": "Loading...",
+            "noModels": "No models available",
+            "promptPlaceholder": "Enter your prompt here...",
+            "run": "Run",
+            "running": "Running...",
+            "response": "Response",
+            "copy": "Copy",
+            "copied": "Copied",
+            "generating": "Generating response...",
+            "error": "Error",
+            "emptyResponse": "Run a prompt to see the AI response here.",
+            "tabs": {
+                "prompt": "Prompt",
+                "response": "Response"
+            }
         }
     }
 }
