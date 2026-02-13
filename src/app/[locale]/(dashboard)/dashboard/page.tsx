@@ -71,7 +71,7 @@ export default async function DashboardPage({
                             <CardHeader>
                                 <CardTitle className="truncate">{prompt.title}</CardTitle>
                                 <CardDescription>
-                                    {(prompt.promptType.name_i18n as any)?.[locale] || (prompt.promptType.name_i18n as any)?.en || prompt.promptType.key}
+                                    {((prompt as any).promptType?.name_i18n as any)?.[locale] || ((prompt as any).promptType?.name_i18n as any)?.en || (prompt as any).promptType?.key}
                                 </CardDescription>
                             </CardHeader>
                             <CardContent className="flex-1">

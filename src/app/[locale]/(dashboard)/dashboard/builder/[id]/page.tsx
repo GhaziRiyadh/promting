@@ -37,7 +37,7 @@ export default async function BuilderPage({ params }: BuilderPageProps) {
 
     return (
         <div className="container mx-auto py-6">
-            <BuilderInterface promptType={promptType} locale={locale} />
+            <BuilderInterface promptType={promptType as any} locale={locale} />
         </div>
     );
 }
