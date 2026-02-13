@@ -12,6 +12,7 @@ export class OpenAIAdapter implements AIModelAdapter {
         }
 
         try {
+            const startTime = Date.now();
             const actualModelId = (modelId?.includes(':') ? modelId.split(':')[1] : modelId) || 'gpt-4o';
             const response = await fetch('https://api.openai.com/v1/chat/completions', {
                 method: 'POST',
@@ -33,6 +34,8 @@ export class OpenAIAdapter implements AIModelAdapter {
 
             const data = await response.json();
             const result = data.choices[0]?.message?.content || '';
+            const endTime = Date.now();
+            const duration = endTime - startTime;
 
             // Log interaction
             if (context) {
@@ -43,7 +46,10 @@ export class OpenAIAdapter implements AIModelAdapter {
                         modelId: actualModelId,
                         providerId: 'openai',
                         type: context.type,
-                        userId: context.userId
+                        userId: context.userId,
+                        durationMs: duration,
+                        tokensIn: data.usage?.prompt_tokens,
+                        tokensOut: data.usage?.completion_tokens
                     }
                 });
             }

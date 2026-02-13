@@ -9,6 +9,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 export default function LoginPage() {
     const router = useRouter();
@@ -16,6 +17,8 @@ export default function LoginPage() {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+
+    const t = useTranslations('Auth');
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -30,12 +33,12 @@ export default function LoginPage() {
             });
 
             if (result?.error) {
-                setError('Invalid email or password');
+                setError(t('invalidCredentials'));
             } else {
                 router.push('/dashboard');
             }
         } catch (error) {
-            setError('An error occurred. Please try again.');
+            setError(t('genericError'));
         } finally {
             setIsLoading(false);
         }
@@ -49,24 +52,24 @@ export default function LoginPage() {
                     className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground transition-colors mb-4"
                 >
                     <ArrowLeft className="mr-2 h-4 w-4" />
-                    Back to Home
+                    {t('backToHome')}
                 </Link>
 
                 <Card>
                     <CardHeader className="space-y-1">
-                        <CardTitle className="text-2xl font-bold">Sign In</CardTitle>
+                        <CardTitle className="text-2xl font-bold">{t('signInTitle')}</CardTitle>
                         <CardDescription>
-                            Enter your email and password to access your account
+                            {t('signInDesc')}
                         </CardDescription>
                     </CardHeader>
                     <CardContent>
                         <form onSubmit={handleSubmit} className="space-y-4">
                             <div className="space-y-2">
-                                <Label htmlFor="email">Email</Label>
+                                <Label htmlFor="email">{t('emailLabel')}</Label>
                                 <Input
                                     id="email"
                                     type="email"
-                                    placeholder="name@example.com"
+                                    placeholder={t('emailPlaceholder')}
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                     required
@@ -74,7 +77,7 @@ export default function LoginPage() {
                                 />
                             </div>
                             <div className="space-y-2">
-                                <Label htmlFor="password">Password</Label>
+                                <Label htmlFor="password">{t('passwordLabel')}</Label>
                                 <Input
                                     id="password"
                                     type="password"
@@ -88,15 +91,15 @@ export default function LoginPage() {
                                 <p className="text-sm text-destructive">{error}</p>
                             )}
                             <Button type="submit" className="w-full" disabled={isLoading}>
-                                {isLoading ? 'Signing in...' : 'Sign In'}
+                                {isLoading ? t('signInButtonLoading') : t('signInButton')}
                             </Button>
                         </form>
                     </CardContent>
                     <CardFooter className="flex flex-col space-y-2">
                         <div className="text-sm text-muted-foreground text-center">
-                            Don't have an account?{' '}
+                            {t('noAccount')}{' '}
                             <Link href="/auth/register" className="text-primary hover:underline">
-                                Sign up
+                                {t('signUpLink')}
                             </Link>
                         </div>
                     </CardFooter>

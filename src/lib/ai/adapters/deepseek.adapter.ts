@@ -12,6 +12,7 @@ export class DeepSeekAdapter implements AIModelAdapter {
         }
 
         try {
+            const startTime = Date.now();
             const actualModelId = (modelId?.includes(':') ? modelId.split(':')[1] : modelId) || 'deepseek-chat';
             // DeepSeek often uses an OpenAI-compatible API structure
             const response = await fetch('https://api.deepseek.com/v1/chat/completions', {
@@ -34,6 +35,8 @@ export class DeepSeekAdapter implements AIModelAdapter {
 
             const data = await response.json();
             const result = data.choices[0]?.message?.content || '';
+            const endTime = Date.now();
+            const duration = endTime - startTime;
 
             // Log interaction
             if (context) {
@@ -44,7 +47,10 @@ export class DeepSeekAdapter implements AIModelAdapter {
                         modelId: actualModelId,
                         providerId: 'deepseek',
                         type: context.type,
-                        userId: context.userId
+                        userId: context.userId,
+                        durationMs: duration,
+                        tokensIn: data.usage?.prompt_tokens,
+                        tokensOut: data.usage?.completion_tokens
                     }
                 });
             }

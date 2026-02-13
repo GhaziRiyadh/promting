@@ -121,5 +121,31 @@
                 "response": "الاستجابة"
             }
         }
+    },
+    "Auth": {
+        "signInTitle": "تسجيل الدخول",
+        "signInDesc": "أدخل بريدك الإلكتروني وكلمة المرور للوصول إلى حسابك",
+        "signUpTitle": "إنشاء حساب",
+        "signUpDesc": "أدخل معلوماتك لإنشاء حسابك",
+        "emailLabel": "البريد الإلكتروني",
+        "passwordLabel": "كلمة المرور",
+        "confirmPasswordLabel": "تأكيد كلمة المرور",
+        "nameLabel": "الاسم",
+        "namePlaceholder": "محمد أحمد",
+        "emailPlaceholder": "name@example.com",
+        "signInButton": "تسجيل الدخول",
+        "signInButtonLoading": "جاري تسجيل الدخول...",
+        "signUpButton": "إنشاء حساب",
+        "signUpButtonLoading": "جاري إنشاء الحساب...",
+        "noAccount": "ليس لديك حساب؟",
+        "hasAccount": "لديك حساب بالفعل؟",
+        "signUpLink": "سجل الآن",
+        "signInLink": "سجل الدخول",
+        "backToHome": "العودة للرئيسية",
+        "invalidCredentials": "البريد الإلكتروني أو كلمة المرور غير صحيحة",
+        "passwordsDoNotMatch": "كلمتا المرور غير متطابقتين",
+        "passwordTooShort": "يجب أن تتكون كلمة المرور من 6 أحرف على الأقل",
+        "registrationFailed": "فشل التسجيل",
+        "genericError": "حدث خطأ. يرجى المحاولة مرة أخرى."
     }
 }

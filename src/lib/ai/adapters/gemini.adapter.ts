@@ -14,6 +14,7 @@ export class GeminiAdapter implements AIModelAdapter {
         }
 
         try {
+            const startTime = Date.now();
             const genAI = new GoogleGenerativeAI(apiKey);
             // Use provided modelId or default, stripping any potential prefix
             let modelName = modelId || 'gemini-1.5-flash';
@@ -25,6 +26,10 @@ export class GeminiAdapter implements AIModelAdapter {
             const result = await model.generateContent(prompt);
             const response = await result.response;
             const text = response.text();
+            
+            const endTime = Date.now();
+            const duration = endTime - startTime;
+            const usage = response.usageMetadata;
 
             // Log interaction
             if (context) {
@@ -35,7 +40,10 @@ export class GeminiAdapter implements AIModelAdapter {
                         modelId: modelName,
                         providerId: 'google',
                         type: context.type,
-                        userId: context.userId
+                        userId: context.userId,
+                        durationMs: duration,
+                        tokensIn: usage?.promptTokenCount,
+                        tokensOut: usage?.candidatesTokenCount
                     }
                 });
             }
@@ -61,6 +69,7 @@ export class GeminiAdapter implements AIModelAdapter {
         }
         const model = genAI.getGenerativeModel({ model: modelName });
 
+        const startTime = Date.now();
         const result = await model.generateContentStream(prompt);
 
         const stream = new ReadableStream({
@@ -72,6 +81,22 @@ export class GeminiAdapter implements AIModelAdapter {
                     controller.enqueue(new TextEncoder().encode(chunkText));
                 }
                 
+                const endTime = Date.now();
+                const duration = endTime - startTime;
+                
+                // usageMetadata might be available in the aggregated response of the stream result,
+                // but usually getting it from the final chunk or the aggregated result object if possible.
+                // For stream, getting exact token usage might require waiting for the full response promise if supported.
+                // GoogleGenerativeAI's generateContentStream returns a result that has a .response promise which resolves to the full response.
+                
+                let usage = undefined;
+                try {
+                    const finalResponse = await result.response;
+                    usage = finalResponse.usageMetadata;
+                } catch (e) {
+                    console.warn('Could not get usage metadata from stream', e);
+                }
+
                 // Log interaction after stream completes
                 if (context) {
                     await prisma.aILog.create({
@@ -81,7 +106,10 @@ export class GeminiAdapter implements AIModelAdapter {
                             modelId: modelName,
                             providerId: 'google',
                             type: context.type,
-                            userId: context.userId
+                            userId: context.userId,
+                            durationMs: duration,
+                            tokensIn: usage?.promptTokenCount,
+                            tokensOut: usage?.candidatesTokenCount
                         }
                     });
                 }
