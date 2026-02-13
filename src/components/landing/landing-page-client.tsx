@@ -27,9 +27,10 @@ interface LandingPageClientProps {
         ctaPrimary: string;
         ctaSecondary: string;
     };
+    userCount?: number;
 }
 
-export default function LandingPageClient({ heroContent }: LandingPageClientProps) {
+export default function LandingPageClient({ heroContent, userCount = 0 }: LandingPageClientProps) {
     const t = useTranslations();
 
     const [prompt, setPrompt] = useState('');
@@ -136,7 +137,7 @@ export default function LandingPageClient({ heroContent }: LandingPageClientProp
             <Header />
 
             <main className="flex-1 flex flex-col w-full">
-                <Hero content={heroContent} />
+                <Hero content={heroContent} userCount={userCount} />
                 
                 <section id="playground" className="container mx-auto px-4 py-12 md:py-20 max-w-7xl min-h-[600px]">
                     <div className="text-center mb-10">

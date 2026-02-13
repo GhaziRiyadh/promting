@@ -5,7 +5,7 @@ import { Github, Twitter, Linkedin } from 'lucide-react';
 import Link from 'next/link';
 
 export function Footer() {
-    const t = useTranslations('Landing.footer');
+    const t = useTranslations('Landing');
 
     return (
         <footer id="contact" className="border-t bg-muted/50 px-4 md:px-6 lg:px-8">
@@ -21,20 +21,20 @@ export function Footer() {
                             <span className="font-bold">Prompt Builder</span>
                         </div>
                         <p className="text-sm text-muted-foreground max-w-xs">
-                            Create powerful AI prompts with ease. No coding required.
+                            {t('footer.brandDescription')}
                         </p>
                     </div>
 
                     {/* Links Section */}
                     <div className="space-y-4">
-                        <h3 className="text-sm font-semibold">Product</h3>
+                        <h3 className="text-sm font-semibold">{t('footer.product')}</h3>
                         <ul className="space-y-3 text-sm">
                             <li>
                                 <button
                                     onClick={() => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })}
                                     className="text-muted-foreground hover:text-foreground transition-colors"
                                 >
-                                    Features
+                                    {t('nav.features')}
                                 </button>
                             </li>
                             <li>
@@ -42,7 +42,7 @@ export function Footer() {
                                     onClick={() => document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' })}
                                     className="text-muted-foreground hover:text-foreground transition-colors"
                                 >
-                                    How It Works
+                                    {t('nav.howItWorks')}
                                 </button>
                             </li>
                         </ul>
@@ -50,14 +50,14 @@ export function Footer() {
 
                     {/* Company Links */}
                     <div className="space-y-4">
-                        <h3 className="text-sm font-semibold">Company</h3>
+                        <h3 className="text-sm font-semibold">{t('footer.company')}</h3>
                         <ul className="space-y-3 text-sm">
                             <li>
                                 <Link
                                     href="/about"
                                     className="text-muted-foreground hover:text-foreground transition-colors"
                                 >
-                                    {t('about')}
+                                    {t('footer.about')}
                                 </Link>
                             </li>
                             <li>
@@ -65,7 +65,7 @@ export function Footer() {
                                     href="/contact"
                                     className="text-muted-foreground hover:text-foreground transition-colors"
                                 >
-                                    {t('contact')}
+                                    {t('footer.contact')}
                                 </Link>
                             </li>
                             <li>
@@ -73,7 +73,7 @@ export function Footer() {
                                     href="/privacy"
                                     className="text-muted-foreground hover:text-foreground transition-colors"
                                 >
-                                    {t('privacy')}
+                                    {t('footer.privacy')}
                                 </Link>
                             </li>
                         </ul>
@@ -81,7 +81,7 @@ export function Footer() {
 
                     {/* Social Links */}
                     <div className="space-y-4">
-                        <h3 className="text-sm font-semibold">Connect</h3>
+                        <h3 className="text-sm font-semibold">{t('footer.connect')}</h3>
                         <div className="flex gap-4">
                             <a
                                 href="https://github.com"
@@ -116,7 +116,7 @@ export function Footer() {
 
                 {/* Bottom Bar */}
                 <div className="mt-12 pt-8 border-t text-center text-sm text-muted-foreground">
-                    <p>{t('copyright')}</p>
+                    <p>{t('footer.copyright')}</p>
                 </div>
             </div>
         </footer>

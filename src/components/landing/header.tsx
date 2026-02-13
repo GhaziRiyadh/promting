@@ -1,7 +1,7 @@
 'use client';
 
 import { useSession } from 'next-auth/react';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 import { Menu, X, Loader2 } from 'lucide-react';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
@@ -10,6 +10,7 @@ import Link from 'next/link';
 
 export function Header() {
     const t = useTranslations('Landing.nav');
+    const locale = useLocale();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const { data: session, status } = useSession();
 
@@ -64,6 +65,11 @@ export function Header() {
 
                 {/* Right Side Actions */}
                 <div className="flex items-center gap-2">
+                    <Button variant="ghost" size="sm" asChild className="px-2 sm:px-3">
+                        <Link href={locale === 'en' ? '/ar' : '/en'}>
+                            {locale === 'en' ? 'AR' : 'EN'}
+                        </Link>
+                    </Button>
                     <ModeToggle />
 
                     {status === 'loading' ? (

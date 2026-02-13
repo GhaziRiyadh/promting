@@ -12,9 +12,10 @@ interface HeroProps {
         ctaPrimary: string;
         ctaSecondary: string;
     };
+    userCount?: number;
 }
 
-export function Hero({ content }: HeroProps) {
+export function Hero({ content, userCount = 0 }: HeroProps) {
     const t = useTranslations('Landing.hero');
     const { data: session, status } = useSession();
 
@@ -24,6 +25,11 @@ export function Hero({ content }: HeroProps) {
             element.scrollIntoView({ behavior: 'smooth' });
         }
     };
+
+    // Format user count for display
+    const joinText = userCount > 0 
+        ? t('joinUsers', { count: userCount.toLocaleString() })
+        : t('joinCommunity');
 
     return (
         <section id="home" className="pt-20 pb-16 md:pt-32 md:pb-24 px-4 md:px-6 lg:px-8">
@@ -35,7 +41,7 @@ export function Hero({ content }: HeroProps) {
                         <div className="space-y-4">
                             <div className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors bg-primary/10 text-primary">
                                 <Sparkles className="mr-1 h-3 w-3" />
-                                AI-Powered Prompt Builder
+                                {t('badge')}
                             </div>
                             <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl bg-linear-to-r from-primary to-primary/60 bg-clip-text text-transparent">
                                 {content?.headline || t('headline')}
@@ -50,12 +56,12 @@ export function Hero({ content }: HeroProps) {
                             {status === 'loading' ? (
                                 <Button size="lg" disabled>
                                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                    Loading...
+                                    {t('loading')}
                                 </Button>
                             ) : session ? (
                                 <Button asChild size="lg" className="text-base group">
                                     <Link href="/dashboard">
-                                        Go to Dashboard
+                                        {t('goToDashboard')}
                                         <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
                                     </Link>
                                 </Button>
@@ -85,7 +91,7 @@ export function Hero({ content }: HeroProps) {
                                     <div className="h-8 w-8 rounded-full bg-primary/40 border-2 border-background" />
                                     <div className="h-8 w-8 rounded-full bg-primary/60 border-2 border-background" />
                                 </div>
-                                <span>Join 1,000+ users</span>
+                                <span>{joinText}</span>
                             </div>
                         </div>
                     </div>
@@ -116,3 +122,4 @@ export function Hero({ content }: HeroProps) {
         </section>
     );
 }
+

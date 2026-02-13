@@ -44,7 +44,12 @@
             "headline": "Master the Art of AI Prompting",
             "subheadline": "Design, refine, and manage powerful AI prompts for any model. Elevate your workflow with our advanced prompt engineering tools.",
             "ctaPrimary": "Start Building Free",
-            "ctaSecondary": "Explore Features"
+            "ctaSecondary": "Explore Features",
+            "badge": "AI-Powered Prompt Builder",
+            "loading": "Loading...",
+            "goToDashboard": "Go to Dashboard",
+            "joinUsers": "Join {count}+ users",
+            "joinCommunity": "Join our community"
         },
         "features": {
             "title": "Key Features",
@@ -94,7 +99,11 @@
             "about": "About",
             "contact": "Contact Us",
             "privacy": "Privacy Policy",
-            "copyright": "© 2026 Dynamic AI Prompt Builder. All rights reserved."
+            "copyright": "© 2026 Dynamic AI Prompt Builder. All rights reserved.",
+            "brandDescription": "Create powerful AI prompts with ease. No coding required.",
+            "product": "Product",
+            "company": "Company",
+            "connect": "Connect"
         },
         "nav": {
             "home": "Home",
