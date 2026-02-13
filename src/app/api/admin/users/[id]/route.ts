@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
-import { UserRole } from "@prisma/client";
+import { UserRole } from "../../../../../../prisma/generated/prisma-client";
 
 export async function PATCH(
     request: Request,

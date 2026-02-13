@@ -1,6 +1,6 @@
 import prisma from '@/lib/prisma';
-import { PrismaClient, UserRole } from '@prisma/client';
 import bcrypt from 'bcryptjs';
+import { UserRole } from './generated/prisma-client';
 
 async function main() {
     console.log('Seeding database...')

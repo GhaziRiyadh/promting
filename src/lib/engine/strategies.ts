@@ -1,4 +1,3 @@
-import { PromptType } from "@prisma/client";
 
 export interface PromptGenerationStrategy {
     generate(template: string, inputs: Record<string, any>): string;
