@@ -26,14 +26,21 @@ const authMiddleware = withAuth(
     },
     {
         callbacks: {
-            authorized: ({ token }) => {
-                console.log("Middleware Authorized Callback - Token:", token ? "Found" : "Missing");
+            authorized: ({ req, token }) => {
+                const path = req.nextUrl.pathname;
+                console.log(`[Middleware] Path: ${path}`);
+                console.log(`[Middleware] Token Found: ${!!token}`);
                 if (token) {
-                    console.log("Middleware Token Role:", token.role);
+                    console.log(`[Middleware] Token Role: ${token.role}`);
+                    console.log(`[Middleware] Token Expiry: ${token.exp}`);
+                    return true;
+                } else {
+                    console.log(`[Middleware] No token found. Cookies:`, req.cookies.getAll().map(c => c.name).join(', '));
+                    return false;
                 }
-                return !!token;
             },
         },
+        secret: process.env.NEXTAUTH_SECRET,
     }
 );
 
