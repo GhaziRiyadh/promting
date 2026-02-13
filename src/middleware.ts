@@ -26,7 +26,13 @@ const authMiddleware = withAuth(
     },
     {
         callbacks: {
-            authorized: ({ token }) => !!token,
+            authorized: ({ token }) => {
+                console.log("Middleware Authorized Callback - Token:", token ? "Found" : "Missing");
+                if (token) {
+                    console.log("Middleware Token Role:", token.role);
+                }
+                return !!token;
+            },
         },
     }
 );
