@@ -84,7 +84,7 @@ export function Footer() {
                         <h3 className="text-sm font-semibold">{t('footer.connect')}</h3>
                         <div className="flex gap-4">
                             <a
-                                href="https://github.com"
+                                href="https://github.com/GhaziRiyadh/promting"
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="text-muted-foreground hover:text-foreground transition-colors"

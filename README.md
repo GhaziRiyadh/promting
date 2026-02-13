@@ -4,7 +4,10 @@
 
 ![AI Prompt Builder](public/og-image.png)
 
-## 🚀 Features
+- **Main Website**: [https://promting.easycodeye.com/en](https://promting.easycodeye.com/en)
+- **GitHub Repository**: [https://github.com/GhaziRiyadh/promting](https://github.com/GhaziRiyadh/promting)
+
+## Features
 
 - **Multi-Model Support**: Seamlessly switch between OpenAI (GPT-4), Google Gemini, and DeepSeek models to test your prompts.
 - **Prompt Templating**: Create reusable prompt templates with dynamic variables.
@@ -15,7 +18,7 @@
 - **Mobile Responsive**: Fully accessible sidebar and interface on mobile devices.
 - **User Authentication**: Secure login and registration using NextAuth.js.
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 - **Framework**: [Next.js 16](https://nextjs.org/) (App Router)
 - **Database**: [PostgreSQL](https://www.postgresql.org/)
@@ -25,7 +28,7 @@
 - **Internationalization**: [next-intl](https://next-intl-docs.vercel.app/)
 - **Deployment**: Docker & Docker Compose
 
-## 🏁 Getting Started
+## Getting Started
 
 Follow these steps to set up the project locally.
 
@@ -40,7 +43,7 @@ Follow these steps to set up the project locally.
 1.  **Clone the repository:**
 
     ```bash
-    git clone https://github.com/your-username/promting.git
+    git clone https://github.com/GhaziRiyadh/promting.git
     cd promting
     ```
 
@@ -93,7 +96,7 @@ Follow these steps to set up the project locally.
 
     Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-## 🐳 Docker Deployment
+## Docker Deployment
 
 You can easily run the entire stack (App + Database) using Docker Compose.
 
@@ -107,7 +110,7 @@ You can easily run the entire stack (App + Database) using Docker Compose.
 
     The application will be available at [http://localhost:3000](http://localhost:3000).
 
-## 🤝 Contributing
+## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
 
@@ -117,6 +120,6 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 4.  Push to the branch (`git push origin feature/AmazingFeature`)
 5.  Open a Pull Request
 
-## 📄 License
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
