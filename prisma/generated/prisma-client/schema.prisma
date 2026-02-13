@@ -78,36 +78,36 @@ model GlobalKeyword {
 }
 
 model AIModel {
-  id          String   @id @default(uuid())
-  name        String
-  providerId  String   // e.g. 'google', 'openai'
-  modelId     String   // e.g. 'gemini-1.5-flash', 'gpt-4o'
-  isActive    Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  
+  id         String   @id @default(uuid())
+  name       String
+  providerId String // e.g. 'google', 'openai'
+  modelId    String // e.g. 'gemini-1.5-flash', 'gpt-4o'
+  isActive   Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
   @@unique([providerId, modelId])
 }
 
 model AILog {
-  id          String   @id @default(uuid())
-  prompt      String   @db.Text
-  response    String   @db.Text
-  modelId     String
-  providerId  String
-  type        String   // e.g., 'GENERATION', 'REFINEMENT', 'TESTING'
-  userId      String?
-  tokensIn    Int?
-  tokensOut   Int?
-  durationMs  Int?
-  createdAt   DateTime @default(now())
+  id         String   @id @default(uuid())
+  prompt     String   @db.Text
+  response   String   @db.Text
+  modelId    String
+  providerId String
+  type       String // e.g., 'GENERATION', 'REFINEMENT', 'TESTING'
+  userId     String?
+  tokensIn   Int?
+  tokensOut  Int?
+  durationMs Int?
+  createdAt  DateTime @default(now())
 }
 
 model LandingContent {
   id        String   @id @default(uuid())
-  section   String   // e.g., 'hero'
-  key       String   // e.g., 'headline'
-  content   Json     // { "en": "...", "ar": "..." }
+  section   String // e.g., 'hero'
+  key       String // e.g., 'headline'
+  content   Json // { "en": "...", "ar": "..." }
   isActive  Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
